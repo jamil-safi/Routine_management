@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Schedule Management</title>
+    <link rel="stylesheet" href="{{ url_for('static' , filename='css/styles.css')}}">
+</head>
+<body data-page="manage_routines">
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    <span class="logo-text">EduSchedule</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <button onclick="window.location.href='{{ url_for('dashboard') }}'" class="nav-item" data-page="teacher-schedule">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            Schedule
+                        </button>
+                    </li>
+                    {% if session.is_coordinator %}
+                        <li>
+                            <button onclick="window.location.href='{{ url_for('manage_routines') }}'" class="nav-item" data-page="manage-routines">
+                                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"/>
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                                Manage Routine
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-name">{{ session.name }}</span>
+                    <div class="user-avatar">{{ session.name[0] }}</div>
+                </div>
+                <button class="logout-btn" onclick="window.location.href='{{ url_for('logout') }}'">
+                    <svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M16 17l5-5-5-5M19.8 12H9M14 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div>
+                        <h1 class="page-title">Manage Routines</h1>
+                        <p class="page-subtitle">Create, edit, and organize your class routines</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <span class="user-name">Welcome back!</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content">
+                <div id="manage-routines-page" class="page">
+                    <div class="routines-page">
+                        <div class="routines-filters">
+                            <select class="filter-select" id="level-filter">
+                                <option value="">All Levels</option>
+                                <option value="1">Level 1</option>
+                                <option value="2">Level 2</option>
+                                <option value="3">Level 3</option>
+                                <option value="4">Level 4</option>
+                            </select>
+                            <select class="filter-select" id="term-filter">
+                                <option value="">All Terms</option>
+                                <option value="1">Term 1</option>
+                                <option value="2">Term 2</option>
+                            </select>
+                            <select class="filter-select" id="status-filter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div id="routines-grid" class="routines-grid">
+                            <!-- Routine cards will be rendered here -->
+                        </div>
+
+                        <div class="pagination">
+                            <div class="pagination-info">
+                                <span id="pagination-text">Showing 1 to 5 of 5 results</span>
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="page-btn" disabled>Previous</button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn" disabled>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="create-routine-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Create New Routine</h2>
+                            <button onclick="closeCreateModal()" class="close-btn" id="close-create-modal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="create-routine-form" method='POST' action="{{ url_for('teacher_assignment') }}">
+                                <div class="form-group">
+                                    <label for="batch">Batch Name</label>
+                                    <input type="number" id="batch" name="batch" required placeholder="e.g., Batch 2023">
+                                </div>
+                                <div class="form-group">
+                                    <label for="level">Level</label>
+                                    <select id="level" name="level" required>
+                                        <option value="">Select Level</option>
+                                        <option value="1">Level 1</option>
+                                        <option value="2">Level 2</option>
+                                        <option value="3">Level 3</option>
+                                        <option value="4">Level 4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="term">Term</label>
+                                    <select id="term" name="term" required>
+                                        <option value="">Select Term</option>
+                                        <option value="1">Term 1</option>
+                                        <option value="2">Term 2</option>
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button onclick="closeCreateModal()" class="btn btn-outline" id="cancel-create">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="save-create">Create Routine</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="delete-routine-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Delete Routine</h3>
+                            <button onclick="closeDeleteModal()" class="close-btn" id="close-delete-modal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="delete-confirmation">
+                                <div class="delete-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div class="delete-content">
+                                    <h4>Are you sure?</h4>
+                                    <p>This will permanently delete the routine. This action cannot be undone.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button onclick="closeDeleteModal()" class="btn btn-outline" id="cancel-delete">Cancel</button>
+                            <button onclick="confirmDeleteRoutine()" class="btn btn-danger" id="confirm-delete">Delete Routine</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="edit-routine-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Edit Routine</h2>
+                            <button class="close-btn" id="close-edit-modal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="edit-routine-form">
+                                <div class="form-group">
+                                    <label for="edit-batch">Batch Name</label>
+                                    <input type="text" id="edit-batch" name="batch" required placeholder="e.g., Batch 2023">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-level">Level</label>
+                                    <select id="edit-level" name="level" required>
+                                        <option value="">Select Level</option>
+                                        <option value="1">Level 1</option>
+                                        <option value="2">Level 2</option>
+                                        <option value="3">Level 3</option>
+                                        <option value="4">Level 4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-term">Term</label>
+                                    <select id="edit-term" name="term" required>
+                                        <option value="">Select Term</option>
+                                        <option value="1">Term 1</option>
+                                        <option value="2">Term 2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-status">Status</label>
+                                    <select id="edit-status" name="status" required>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" id="cancel-edit">Cancel</button>
+                            <button class="btn btn-primary" id="save-edit">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+    <script>
+        const viewRoutineURL = "{{ url_for('view_routine') }}";
+        const editRoutineURL = "{{ url_for('edit_routine') }}";
+    </script>
+
+
+    <script src="{{ url_for('static' , filename='js/manage_routines.js')}}"></script>
+</body>
+</html>
