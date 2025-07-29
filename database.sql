@@ -1,5 +1,5 @@
-CREATE DATABASE routines;
-USE routines;
+CREATE DATABASE routine_management;
+USE routine_management;
 
 
 
