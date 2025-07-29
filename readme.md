@@ -54,8 +54,25 @@ pip install -r requirements.txt
 
 ### 4. Configure MySQL
 
-- MySQL server 
-- Create a database (e.g., `routine_db`)
+ - Open MySQL workbench 
+  
+ - Create a database (save **database.sql** file and run it completely)
+  
+ - from **app.py** - Set your mysql_user , mysql_password and rencetly created database name   
+   ```
+      app.config['MYSQL_USER'] = 'your_connection_name'
+      app.config['MYSQL_PASSWORD'] = 'your_password' 
+      app.config['MYSQL_DB'] = 'database_name'
+   ```
+
+   ```
+    db_config = {
+      'host': 'localhost',
+      'user': 'your_connection_name',
+      'password': 'your_password',
+      'database': 'database_name'
+    }
+    ```
 
 ### 5. Run the Application
 
@@ -64,7 +81,6 @@ python app.py
 ```
 
 Access via browser: [http://127.0.0.1:5000](http://127.0.0.1:5000)
-
 
 
 ## Contact
