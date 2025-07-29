@@ -1,98 +1,101 @@
-CREATE DATABASE routine_management;
-USE routine_management;
+CREATE DATABASE routines;
+USE routines;
 
 
 
 -- techers table 
 CREATE TABLE teachers (
-	teacher_id INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(100),
-	email VARCHAR(100) UNIQUE,
-	password VARCHAR(255),
-	designation VARCHAR(50),
-	dept_name VARCHAR(50),
-	is_coordinator BOOLEAN DEFAULT FALSE
+    teacher_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    designation VARCHAR(50),
+    dept_name VARCHAR(50),
+    is_coordinator BOOLEAN DEFAULT FALSE
 );
+
 
 
 -- Batches Table
 CREATE TABLE batches (
-	batch_id INT PRIMARY KEY AUTO_INCREMENT,
-	level INT NOT NULL,
-	term INT NOT NULL,
-	batch INT NOT NULL,
-	UNIQUE(batch , level , term)
+    batch_id INT PRIMARY KEY AUTO_INCREMENT,
+    level INT NOT NULL,
+    term INT NOT NULL,
+    batch INT NOT NULL,
+    UNIQUE(batch , level , term)
 );
+
 
 --  Courses Table
 CREATE TABLE courses (
 	course_id INT PRIMARY KEY AUTO_INCREMENT,
-	course_code VARCHAR(20) NOT NULL,
-	course_title VARCHAR(100),
-	credit DECIMAL(4 , 2) NOT NULL ,
-	level INT,
-	term INT,
-	is_sessional BOOLEAN DEFAULT FALSE
+    course_code VARCHAR(20) NOT NULL,
+    course_title VARCHAR(100),
+    credit DECIMAL(4 , 2) NOT NULL ,
+    level INT,
+    term INT,
+    is_sessional BOOLEAN DEFAULT FALSE
 );
 
 -- classroom table
 CREATE TABLE classrooms (
-	room_id INT PRIMARY KEY AUTO_INCREMENT,
-	room_name VARCHAR(50) NOT NULL
+    room_id INT PRIMARY KEY ,
+    room_name VARCHAR(50) NOT NULL
 );
 
 -- table to store usable classrooms or labs for a course
 CREATE TABLE corresponding_classrooms(
-	course_id INT NOT NULL,
-	room_id INT NOT NUll,
-	PRIMARY KEY (course_id, room_id),
-	FOREIGN KEY (course_id) REFERENCES courses(course_id),
-	FOREIGN KEY (room_id) REFERENCES classrooms(room_id)
+    course_id INT NOT NULL,
+    room_id INT NOT NUll,
+    PRIMARY KEY (course_id, room_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id),
+    FOREIGN KEY (room_id) REFERENCES classrooms(room_id)
 );
 
 -- routine
 CREATE TABLE routines (
-	routine_id INT PRIMARY KEY AUTO_INCREMENT,
-	batch_id INT,
-	active_status BOOLEAN DEFAULT FALSE,
-	FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+    routine_id INT PRIMARY KEY AUTO_INCREMENT,
+    batch_id INT,
+    active_status BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
 );
 
 -- table to store assigned teacher to a course in a specific routine for a batch
 CREATE TABLE routine_course_teachers (
-	routine_id INT,
-	course_id INT,
-	teacher_id INT,
-	PRIMARY KEY (routine_id, course_id , teacher_id),
-	FOREIGN KEY (routine_id) REFERENCES routines(routine_id),
-	FOREIGN KEY (course_id) REFERENCES courses(course_id),
-	FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
+    routine_id INT,
+    course_id INT,
+    teacher_id INT,
+    PRIMARY KEY (routine_id, course_id , teacher_id),
+    FOREIGN KEY (routine_id) REFERENCES routines(routine_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id),
+    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
 );
 
--- select * from routine_course_teachers;
 CREATE TABLE periods (
-	period_id INT NOT NULL,
-	period_span INT DEFAULT 1,
-	routine_id INT NOT NULL,
-	course_id INT NOT NULL,
-	room_id INT,
-	day ENUM('SAT', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI'),
-	section VARCHAR(5) NOT NULL, 
-	PRIMARY KEY ( routine_id , section , day , period_id),
-	FOREIGN KEY (routine_id) REFERENCES routines(routine_id),
-	FOREIGN KEY (course_id) REFERENCES courses(course_id),
-	FOREIGN KEY (room_id) REFERENCES classrooms(room_id)
+    period_id INT PRIMARY KEY AUTO_INCREMENT,
+    routine_id INT,
+    course_id INT,
+    room_id INT,
+    start_time TIME,
+    end_time TIME,
+    day_of_week ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+    section CHAR NOT NULL, 
+    FOREIGN KEY (routine_id) REFERENCES routines(routine_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id),
+    FOREIGN KEY (room_id) REFERENCES classrooms(room_id)
 );
-
 
 -- batchs to which a teacher is assigned as course co-ordinators
 CREATE TABLE course_coordinator_batches(
-	teacher_id INT,
-	batch_id INT,
-	PRIMARY KEY(teacher_id, batch_id),
-	FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id),
-	FOREIGN KEY(batch_id) REFERENCES batches(batch_id)
+    teacher_id INT,
+    batch_id INT,
+    PRIMARY KEY(teacher_id, batch_id),
+    FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id),
+    FOREIGN KEY(batch_id) REFERENCES batches(batch_id)
 );
+
+
+-- ** Sample Data ** --
 
 
 INSERT INTO batches (batch, level, term)
@@ -265,120 +268,176 @@ VALUES
 ('Hum-415', 'Government', 2.0, 4, 2, FALSE),
 ('Hum-417', 'Entrepreneurship for IT Business', 2.0, 4, 2, FALSE);
 
--- select * from routines;
 
-INSERT INTO classrooms (room_name) VALUES
-('Classroom'),
-('Computer Laboratory'),
-('Networking & Communication Laboratory'),
-('Microprocessor & Interfacing Laboratory'),
-('Multimedia Laboratory'),
-('Hardware & Networking Laboratory'),
-('Electronics & Circuit Laboratory'),
-('Compiler Laboratory'),
-('Mobile Games & Apps Development Centre'),
-('FAB LAB CUET');
+
+INSERT INTO classrooms (room_id, room_name) VALUES
+(3101, 'Classroom'),
+(3102, 'Classroom'),
+(3103, 'Classroom'),
+(3104, 'Classroom'),
+(3105, 'Classroom'),
+(3106, 'Classroom'),
+(3107, 'Classroom'),
+(3108, 'Classroom'),
+(3109, 'Classroom'),
+(3110, 'Classroom'),
+(3201, 'Classroom'),
+(3202, 'Classroom'),
+(3203, 'Classroom'),
+(3204, 'Classroom'),
+(3205, 'Classroom'),
+(3206, 'Classroom'),
+(3207, 'Classroom'),
+(3208, 'Classroom'),
+(3209, 'Classroom'),
+(3210, 'Classroom'),
+(3211, 'Classroom'),
+(3301, 'Classroom'),
+(3302, 'Computer Laboratory'),
+(3303, 'Networking & Communication Laboratory'),
+(3304, 'Microprocessor & Interfacing Laboratory'),
+(3305, 'Classroom'),
+(3306, 'Classroom'),
+(3307, 'Classroom'),
+(3308, 'Classroom'),
+(3309, 'Classroom'),
+(3310, 'Classroom'),
+(3311, 'Classroom'),
+(3401, 'Multimedia Laboratory'),
+(3402, 'Hardware & Networking Laboratory'),
+(3403, 'Electronics & Circuit Laboratory'),
+(3404, 'Compiler Laboratory'),
+(3405, 'Classroom'),
+(3406, 'Classroom'),
+(3407, 'Classroom'),
+(3408, 'Classroom'),
+(3409, 'Classroom'),
+(3410, 'Classroom'),
+(3411, 'Classroom'),
+(3501, 'Robotics Lab'),
+(3502, 'Mobile Games & Apps Development Centre'),
+(3503, 'FAB LAB CUET'),
+(3504, 'Classroom'),
+(3505, 'Classroom'),
+(3506, 'Classroom'),
+(3507, 'Classroom'),
+(3508, 'Classroom'),
+(3509, 'Classroom'),
+(3510, 'Classroom'),
+(3511, 'Classroom'),
+(3601, 'Classroom'),
+(3602, 'Classroom'),
+(3603, 'Classroom'),
+(3604, 'Classroom'),
+(3605, 'Classroom'),
+(3606, 'Classroom'),
+(3607, 'Classroom'),
+(3608, 'Classroom'),
+(3609, 'Classroom'),
+(3610, 'Classroom'),
+(3611, 'Classroom');
 
 
 INSERT INTO corresponding_classrooms (course_id, room_id) VALUES
-(2, 2),  -- CSE-142 (Structured Programming (Sessional)) -> Computer Laboratory
-(2, 3),  -- CSE-142 -> Multimedia Laboratory
-(4, 4),  -- CSE-144 (Object Oriented Programming (Sessional)) -> Networking & Communication Laboratory
-(4, 5),  -- CSE-144 -> Hardware & Networking Laboratory
-(14, 6), -- Chem-142 (Chemistry (Sessional)) -> Microprocessor & Interfacing Laboratory
-(14, 7), -- Chem-142 -> Robotics Lab
-(16, 8), -- EE-184 (Electronic Devices and Circuits (Sessional)) -> Multimedia Laboratory
-(16, 9), -- EE-184 -> Electronics & Circuit Laboratory
-(18, 10), -- Hum-144 (English Skill Development (Sessional)) -> Hardware & Networking Laboratory
-(18, 2), -- Hum-144 -> Mobile Games & Apps Development Centre
-(20, 3), -- CSE-222 (Digital Logic Design (Sessional)) -> Electronics & Circuit Laboratory
-(20, 4), -- CSE-222 -> Compiler Laboratory
-(24, 5), -- CSE-242 (Data Structures (Sessional)) -> Compiler Laboratory
-(24, 6), -- CSE-242 -> FAB LAB CUET
-(26, 7), -- ME-246 (Engineering Drawing & CAD (Sessional)) -> Robotics Lab
-(26, 8), -- ME-246 -> Multimedia Laboratory
-(30, 9), -- CSE-224 (Digital Signal Processing (Sessional)) -> Mobile Games & Apps Development Centre
-(30, 10), -- CSE-224 -> Hardware & Networking Laboratory
-(32, 2), -- CSE-202 (Software Development with JAVA (Sessional)) -> FAB LAB CUET
-(32, 3), -- CSE-202 -> Robotics Lab
-(34, 4), -- CSE-252 (Algorithms Design and Analysis (Sessional)) -> Networking & Communication Laboratory
-(34, 5), -- CSE-252 -> Electronics & Circuit Laboratory
-(36, 6), -- EE-284 (Electrical Drives and Instrumentation (Sessional)) -> Computer Laboratory
-(36, 7), -- EE-284 -> Mobile Games & Apps Development Centre
-(38, 8), -- CSE-314 (Data Communication (Sessional)) -> Networking & Communication Laboratory
-(38, 9), -- CSE-314 -> Compiler Laboratory
-(40, 10), -- CSE-326 (Internet Programming (Sessional)) -> Microprocessor & Interfacing Laboratory
-(40, 2), -- CSE-326 -> FAB LAB CUET
-(42, 3), -- CSE-334 (Microprocessors and Interfacing (Sessional)) -> Hardware & Networking Laboratory
-(42, 4), -- CSE-334 -> Multimedia Laboratory
-(44, 5), -- CSE-336 (Operating Systems (Sessional)) -> Electronics & Circuit Laboratory
-(44, 6), -- CSE-336 -> Robotics Lab
-(46, 7), -- CSE-354 (System Analysis and Design (Sessional)) -> Compiler Laboratory
-(46, 8), -- CSE-354 -> Hardware & Networking Laboratory
-(48, 9), -- CSE-312 (Computer Networks (Sessional)) -> Robotics Lab
-(48, 10), -- CSE-312 -> Mobile Games & Apps Development Centre
-(50, 2), -- CSE-300 (Software Development Project (Sessional)) -> FAB LAB CUET
-(50, 3), -- CSE-300 -> Electronics & Circuit Laboratory
-(52, 4), -- CSE-346 (Artificial Intelligence with Python (Sessional)) -> Multimedia Laboratory
-(52, 5), -- CSE-346 -> FAB LAB CUET
-(54, 6), -- CSE-302 (Technical Writing and Presentation (Sessional)) -> Networking & Communication Laboratory
-(54, 7), -- CSE-302 -> Compiler Laboratory
-(56, 8), -- CSE-356 (Software Engineering (Sessional)) -> Microprocessor & Interfacing Laboratory
-(56, 9), -- CSE-356 -> Robotics Lab
-(58, 10), -- CSE-436 (Information Security (Sessional)) -> Computer Laboratory
-(58, 2), -- CSE-436 -> Mobile Games & Apps Development Centre
-(60, 3), -- CSE-438 (Fundamentals of Internet of Things (Sessional)) -> Hardware & Networking Laboratory
-(60, 4), -- CSE-438 -> Multimedia Laboratory
-(62, 5), -- CSE-446 (Machine Learning (Sessional)) -> Electronics & Circuit Laboratory
-(62, 6), -- CSE-446 -> FAB LAB CUET
-(64, 7), -- CSE-432 (Compiler Design (Sessional)) -> Compiler Laboratory
-(64, 8), -- CSE-432 -> Hardware & Networking Laboratory
-(66, 9), -- CSE-458 (Computer Graphics (Sessional)) -> Robotics Lab
-(66, 10), -- CSE-458 -> Robotics Lab
-(68, 2), -- CSE-412 (Simulation and Modeling (Sessional)) -> Networking & Communication Laboratory
-(68, 3), -- CSE-412 -> Electronics & Circuit Laboratory
-(70, 4), -- CSE-454 (Digital Image Processing (Sessional)) -> Multimedia Laboratory
-(70, 5), -- CSE-454 -> Mobile Games & Apps Development Centre
-(72, 6), -- CSE-456 (Embedded System Design (Sessional)) -> Microprocessor & Interfacing Laboratory
-(72, 7), -- CSE-456 -> Compiler Laboratory
-(74, 8), -- CSE-460 (High Performance Computing (Sessional)) -> Computer Laboratory
-(74, 9), -- CSE-460 -> FAB LAB CUET
-(76, 10), -- CSE-464 (Algorithm Engineering (Sessional)) -> Hardware & Networking Laboratory
-(76, 2), -- CSE-464 -> Multimedia Laboratory
-(78, 3), -- CSE-466 (Data Mining (Sessional)) -> Electronics & Circuit Laboratory
-(78, 4), -- CSE-466 -> Robotics Lab
-(80, 5), -- CSE-468 (Mobile Applications Development (Sessional)) -> Mobile Games & Apps Development Centre
-(80, 6), -- CSE-468 -> Hardware & Networking Laboratory
-(82, 7), -- CSE-470 (Numerical Analysis (Sessional)) -> Compiler Laboratory
-(82, 8), -- CSE-470 -> Mobile Games & Apps Development Centre
-(84, 9), -- CSE-442 (Multimedia Theory (Sessional)) -> Multimedia Laboratory
-(84, 10), -- CSE-442 -> Electronics & Circuit Laboratory
-(86, 2), -- CSE-444 (Neural Networks and Fuzzy Logic (Sessional)) -> Networking & Communication Laboratory
-(86, 3), -- CSE-444 -> FAB LAB CUET
-(88, 4), -- CSE-448 (Big Data (Sessional)) -> Computer Laboratory
-(88, 5), -- CSE-448 -> Compiler Laboratory
-(90, 6), -- CSE-450 (Communication Engineering (Sessional)) -> Hardware & Networking Laboratory
-(90, 7), -- CSE-450 -> Robotics Lab
-(92, 8), -- CSE-416 (Network Planning (Sessional)) -> Microprocessor & Interfacing Laboratory
-(92, 9), -- CSE-416 -> Multimedia Laboratory
-(94, 10), -- CSE-418 (Parallel & Distributed Processing (Sessional)) -> Electronics & Circuit Laboratory
-(94, 2), -- CSE-418 -> Mobile Games & Apps Development Centre
-(96, 3), -- CSE-420 (VLSI Design (Sessional)) -> Compiler Laboratory
-(96, 4), -- CSE-420 -> Hardware & Networking Laboratory
-(98, 5), -- CSE-422 (Fault Tolerant Systems (Sessional)) -> Robotics Lab
-(98, 6), -- CSE-422 -> FAB LAB CUET
-(100, 7), -- CSE-424 (Computational Geometry (Sessional)) -> Networking & Communication Laboratory
-(100, 8), -- CSE-424 -> Electronics & Circuit Laboratory
-(102, 9), -- CSE-426 (Mobile and Wireless Networking (Sessional)) -> Mobile Games & Apps Development Centre
-(102, 10), -- CSE-426 -> Robotics Lab
-(104, 2), -- CSE-428 (Basic Graph Theory (Sessional)) -> Microprocessor & Interfacing Laboratory
-(104, 3), -- CSE-428 -> Compiler Laboratory
-(106, 4), -- CSE-430 (High Performance Database (Sessional)) -> Computer Laboratory
-(106, 5); -- CSE-430 -> Mobile Games & Apps Development Centre
+(2, 3201),  -- CSE-142 (Structured Programming (Sessional)) -> Computer Laboratory
+(2, 3401),  -- CSE-142 -> Multimedia Laboratory
+(4, 3202),  -- CSE-144 (Object Oriented Programming (Sessional)) -> Networking & Communication Laboratory
+(4, 3402),  -- CSE-144 -> Hardware & Networking Laboratory
+(14, 3203), -- Chem-142 (Chemistry (Sessional)) -> Microprocessor & Interfacing Laboratory
+(14, 3501), -- Chem-142 -> Robotics Lab
+(16, 3204), -- EE-184 (Electronic Devices and Circuits (Sessional)) -> Multimedia Laboratory
+(16, 3403), -- EE-184 -> Electronics & Circuit Laboratory
+(18, 3205), -- Hum-144 (English Skill Development (Sessional)) -> Hardware & Networking Laboratory
+(18, 3502), -- Hum-144 -> Mobile Games & Apps Development Centre
+(20, 3206), -- CSE-222 (Digital Logic Design (Sessional)) -> Electronics & Circuit Laboratory
+(20, 3404), -- CSE-222 -> Compiler Laboratory
+(24, 3207), -- CSE-242 (Data Structures (Sessional)) -> Compiler Laboratory
+(24, 3503), -- CSE-242 -> FAB LAB CUET
+(26, 3208), -- ME-246 (Engineering Drawing & CAD (Sessional)) -> Robotics Lab
+(26, 3401), -- ME-246 -> Multimedia Laboratory
+(30, 3209), -- CSE-224 (Digital Signal Processing (Sessional)) -> Mobile Games & Apps Development Centre
+(30, 3402), -- CSE-224 -> Hardware & Networking Laboratory
+(32, 3210), -- CSE-202 (Software Development with JAVA (Sessional)) -> FAB LAB CUET
+(32, 3501), -- CSE-202 -> Robotics Lab
+(34, 3211), -- CSE-252 (Algorithms Design and Analysis (Sessional)) -> Networking & Communication Laboratory
+(34, 3403), -- CSE-252 -> Electronics & Circuit Laboratory
+(36, 3302), -- EE-284 (Electrical Drives and Instrumentation (Sessional)) -> Computer Laboratory
+(36, 3502), -- EE-284 -> Mobile Games & Apps Development Centre
+(38, 3303), -- CSE-314 (Data Communication (Sessional)) -> Networking & Communication Laboratory
+(38, 3404), -- CSE-314 -> Compiler Laboratory
+(40, 3304), -- CSE-326 (Internet Programming (Sessional)) -> Microprocessor & Interfacing Laboratory
+(40, 3503), -- CSE-326 -> FAB LAB CUET
+(42, 3305), -- CSE-334 (Microprocessors and Interfacing (Sessional)) -> Hardware & Networking Laboratory
+(42, 3401), -- CSE-334 -> Multimedia Laboratory
+(44, 3306), -- CSE-336 (Operating Systems (Sessional)) -> Electronics & Circuit Laboratory
+(44, 3501), -- CSE-336 -> Robotics Lab
+(46, 3307), -- CSE-354 (System Analysis and Design (Sessional)) -> Compiler Laboratory
+(46, 3402), -- CSE-354 -> Hardware & Networking Laboratory
+(48, 3308), -- CSE-312 (Computer Networks (Sessional)) -> Robotics Lab
+(48, 3502), -- CSE-312 -> Mobile Games & Apps Development Centre
+(50, 3309), -- CSE-300 (Software Development Project (Sessional)) -> FAB LAB CUET
+(50, 3403), -- CSE-300 -> Electronics & Circuit Laboratory
+(52, 3310), -- CSE-346 (Artificial Intelligence with Python (Sessional)) -> Multimedia Laboratory
+(52, 3503), -- CSE-346 -> FAB LAB CUET
+(54, 3311), -- CSE-302 (Technical Writing and Presentation (Sessional)) -> Networking & Communication Laboratory
+(54, 3404), -- CSE-302 -> Compiler Laboratory
+(56, 3405), -- CSE-356 (Software Engineering (Sessional)) -> Microprocessor & Interfacing Laboratory
+(56, 3501), -- CSE-356 -> Robotics Lab
+(58, 3406), -- CSE-436 (Information Security (Sessional)) -> Computer Laboratory
+(58, 3502), -- CSE-436 -> Mobile Games & Apps Development Centre
+(60, 3407), -- CSE-438 (Fundamentals of Internet of Things (Sessional)) -> Hardware & Networking Laboratory
+(60, 3401), -- CSE-438 -> Multimedia Laboratory
+(62, 3408), -- CSE-446 (Machine Learning (Sessional)) -> Electronics & Circuit Laboratory
+(62, 3503), -- CSE-446 -> FAB LAB CUET
+(64, 3409), -- CSE-432 (Compiler Design (Sessional)) -> Compiler Laboratory
+(64, 3402), -- CSE-432 -> Hardware & Networking Laboratory
+(66, 3410), -- CSE-458 (Computer Graphics (Sessional)) -> Robotics Lab
+(66, 3501), -- CSE-458 -> Robotics Lab
+(68, 3411), -- CSE-412 (Simulation and Modeling (Sessional)) -> Networking & Communication Laboratory
+(68, 3403), -- CSE-412 -> Electronics & Circuit Laboratory
+(70, 3504), -- CSE-454 (Digital Image Processing (Sessional)) -> Multimedia Laboratory
+(70, 3502), -- CSE-454 -> Mobile Games & Apps Development Centre
+(72, 3505), -- CSE-456 (Embedded System Design (Sessional)) -> Microprocessor & Interfacing Laboratory
+(72, 3404), -- CSE-456 -> Compiler Laboratory
+(74, 3506), -- CSE-460 (High Performance Computing (Sessional)) -> Computer Laboratory
+(74, 3503), -- CSE-460 -> FAB LAB CUET
+(76, 3507), -- CSE-464 (Algorithm Engineering (Sessional)) -> Hardware & Networking Laboratory
+(76, 3401), -- CSE-464 -> Multimedia Laboratory
+(78, 3508), -- CSE-466 (Data Mining (Sessional)) -> Electronics & Circuit Laboratory
+(78, 3501), -- CSE-466 -> Robotics Lab
+(80, 3509), -- CSE-468 (Mobile Applications Development (Sessional)) -> Mobile Games & Apps Development Centre
+(80, 3402), -- CSE-468 -> Hardware & Networking Laboratory
+(82, 3510), -- CSE-470 (Numerical Analysis (Sessional)) -> Compiler Laboratory
+(82, 3502), -- CSE-470 -> Mobile Games & Apps Development Centre
+(84, 3511), -- CSE-442 (Multimedia Theory (Sessional)) -> Multimedia Laboratory
+(84, 3403), -- CSE-442 -> Electronics & Circuit Laboratory
+(86, 3601), -- CSE-444 (Neural Networks and Fuzzy Logic (Sessional)) -> Networking & Communication Laboratory
+(86, 3503), -- CSE-444 -> FAB LAB CUET
+(88, 3602), -- CSE-448 (Big Data (Sessional)) -> Computer Laboratory
+(88, 3404), -- CSE-448 -> Compiler Laboratory
+(90, 3603), -- CSE-450 (Communication Engineering (Sessional)) -> Hardware & Networking Laboratory
+(90, 3501), -- CSE-450 -> Robotics Lab
+(92, 3604), -- CSE-416 (Network Planning (Sessional)) -> Microprocessor & Interfacing Laboratory
+(92, 3401), -- CSE-416 -> Multimedia Laboratory
+(94, 3605), -- CSE-418 (Parallel & Distributed Processing (Sessional)) -> Electronics & Circuit Laboratory
+(94, 3502), -- CSE-418 -> Mobile Games & Apps Development Centre
+(96, 3606), -- CSE-420 (VLSI Design (Sessional)) -> Compiler Laboratory
+(96, 3402), -- CSE-420 -> Hardware & Networking Laboratory
+(98, 3607), -- CSE-422 (Fault Tolerant Systems (Sessional)) -> Robotics Lab
+(98, 3503), -- CSE-422 -> FAB LAB CUET
+(100, 3608), -- CSE-424 (Computational Geometry (Sessional)) -> Networking & Communication Laboratory
+(100, 3403), -- CSE-424 -> Electronics & Circuit Laboratory
+(102, 3609), -- CSE-426 (Mobile and Wireless Networking (Sessional)) -> Mobile Games & Apps Development Centre
+(102, 3501), -- CSE-426 -> Robotics Lab
+(104, 3610), -- CSE-428 (Basic Graph Theory (Sessional)) -> Microprocessor & Interfacing Laboratory
+(104, 3404), -- CSE-428 -> Compiler Laboratory
+(106, 3611), -- CSE-430 (High Performance Database (Sessional)) -> Computer Laboratory
+(106, 3502); -- CSE-430 -> Mobile Games & Apps Development Centre
 
 
+-- password - 123
 INSERT INTO teachers (name, email, password, designation, dept_name, is_coordinator) VALUES
-('Jamil Safi', 'jamil@gmail.com', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Professor', 'cse', TRUE),
+('Md. Rashadur Rahman', 'rashadur@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', TRUE),
 ('Dr. Pranab Kumar Dhar', 'pranabdhar81@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Professor', 'cse', FALSE),
 ('Dr. Kaushik Deb', 'debkaushik99@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Professor', 'cse', FALSE),
 ('Dr. Mohammed Moshiul Hoque', 'moshiul_240@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Professor', 'cse', FALSE),
@@ -400,23 +459,19 @@ INSERT INTO teachers (name, email, password, designation, dept_name, is_coordina
 ('Omar Sharif', 'omar.sharif@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
 ('Sabiha Anan', 'sabiha.anan@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', TRUE),
 ('Md. Atiqul Islam Rizvi', 'atiqul.rizvi@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
-('Md. Rashadur Rahman', 'rashadur@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', TRUE),
-('Hasan Murad', 'hasanmurad@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
+('Hasan Murad', 'hasanmurad@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', TRUE),
 ('Saadman Sakib', 'saadman@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
 ('Shuhena Salam Aonty', 'shuhena@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
-('Md. Al-Mamun Provath', 'am.provath@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
+('Md. Al-Mamun Provath', 'am.provath@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', TRUE),
 ('Maisha Fahmida', 'maisha.fahmida@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
 ('Afroza Akter', 'afroza@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
 ('Atiya Masuda Siddika', 'atiya.siddika@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE),
 ('Ayesha Banu', 'ayesha.banu@cuet.ac.bd', '$2b$12$I8gzQ.ENgMU1.jP9wYtLpeLbRssSmwtZ24IgvFHoOBPkyxXtQfq7O', 'Assistant Professor', 'cse', FALSE);
 
 
-insert into course_coordinator_batches ( teacher_id , batch_id)
-values
-(23, 1), (23, 2), (23, 3), (23, 4), (23, 5), (23, 6), (23, 7), (23, 8),
-(23, 9), (23, 10), (23, 11), (23, 12), (23, 13), (23, 14), (23, 15), (23, 16),
-(23, 17), (23, 18), (23, 19), (23, 20), (23, 21), (23, 22), (23, 23), (23, 24),
-(23, 25), (23, 26), (23, 27), (23, 28), (23, 29), (23, 30), (23, 31), (23, 32),
-(1 , 1) , (1 , 2) , (1 , 3) , (1 , 4) , (1 , 5) , (1 , 6) , (1 , 7) , (1 , 8) , (1 , 9) , (1 , 10) , (1 , 11) , (1 , 12) , (1 , 13) , (1 , 14) , (1 , 15) , (1 , 16),
-(1 , 17) , (1 , 18) , (1 , 19) , (1 , 20) , (1 , 21) , (1 , 22) , (1 , 23) , (1 , 24);
-
+-- assigning 'rashadur@cuet.ac.bd' as course teacher of all the batch from (19 - 24) for testing
+insert into course_coordinator_batches ( teacher_id , batch_id) VALUES
+(1 , 1) , (1 , 2) , (1 , 3) , (1 , 4) , (1 , 5) , (1 , 6) , (1 , 7) , (1 , 8) , (1 , 9) , (1 , 10) , (1 , 11) , (1 , 12) , (1 , 13) , (1 , 14) , 
+(1 , 15) , (1 , 16), (1 , 17) , (1 , 18) , (1 , 19) , (1 , 20) , (1 , 21) , (1 , 22) , (1 , 23) , (1 , 24) , (1 , 25) , (1 , 26) , (1 , 27) , 
+(1 , 28) , (1 , 29) , (1 , 30) , (1 , 31) , (1 , 32), (1 , 33) , (1 , 34) , (1 , 35) , (1 , 36) , (1 , 37) , (1 , 38) , 
+( 1, 39) , (1 , 40) , (1 , 41) , (1 , 42) , (1 , 43) , (1 , 44) , (1 , 45) , (1 , 46) , (1 , 47) , (1 , 48);
