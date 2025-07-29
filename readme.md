@@ -54,9 +54,8 @@ pip install -r requirements.txt
 
 ### 4. Configure MySQL
 
-- Start XAMPP (or MySQL server)
+- MySQL server 
 - Create a database (e.g., `routine_db`)
-- Configure DB credentials in your `.env` or within your Flask config
 
 ### 5. Run the Application
 
@@ -66,22 +65,7 @@ python app.py
 
 Access via browser: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-## Usage
 
-- **Admin**: Assign courses, teachers, rooms, and time slots
-- **Teachers/Students**: View own routine
-- **Office**: View room-based schedules
-
-## Future Enhancements
-
-- Excel/Word/PDF draft upload
-- Email notifications
-- Class reschedule request system
-- Direct admin-student communication interface
-
-## License
-
-[MIT License](LICENSE)
 
 ## Contact
 
