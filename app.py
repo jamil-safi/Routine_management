@@ -307,51 +307,6 @@ def api_manage_routines():
     return jsonify(routine)
 
 
-
-# @app.route('/teacher_assignment' , methods=['GET' , 'POST'])
-# def teacher_assignment():
-#     teacher_id = session.get('user_id')
-#     if not teacher_id:
-#         return redirect(url_for('login'))
-    
-    
-#     level = int(request.form.get('level'))
-#     term = int(request.form.get('term'))
-#     batch = int(request.form.get('batch'))
-#     stat = False
-    
-#     session['level'] = level
-#     session['term'] = term
-#     session['batch'] = batch
-    
-#     conn = get_db_connection()
-#     with conn.cursor() as cursor:
-#         cursor.execute("""
-#             SELECT batch_id from batches 
-#             WHERE level = %s AND term = %s AND batch = %s
-#         """, (level, term , batch))
-#         btt_id = cursor.fetchone()
-        
-#         bt_id = btt_id['batch_id']
-#         cursor.execute("""
-#             INSERT INTO routines (batch_id , active_status)
-#             VALUES (%s, %s)
-#         """, (bt_id , stat))
-#         conn.commit()
-        
-#         cursor.execute("SELECT COUNT(*) AS total_routines FROM routines;")
-#         result = cursor.fetchone()
-#         session['routine_id'] = result['total_routines']
-
-#     conn.close()
-    
-#     # print(teacher_id)
-#     # print(level , term , batch)
-#     # print(session['level'] , session['term'] , session['batch'], session['routine_id'])
-
-#     return render_template('teacher_assignment.html')
-
-
 @app.route('/teacher_assignment', methods=['GET', 'POST'])
 def teacher_assignment():
     teacher_id = session.get('user_id')
