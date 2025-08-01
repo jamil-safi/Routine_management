@@ -1,266 +1,5 @@
 
 
-
-
-// const RoutineData = {
-//   sectionA: {
-//     SUN: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room1",
-//         room_name: "Room 1",
-//         is_sessional: false,
-//       },
-//       2: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room2",
-//         room_name: "Room 2",
-//         is_sessional: false,
-//       },
-//       4: {
-//         courseId: "cse336",
-//         section: "CSE-336 - Computer Lab 1",
-//         periodSpan: 3,
-//         room_id: "lab101",
-//         room_name: "Computer Lab 1",
-//         is_sessional: true,
-//       },
-//     },
-//     MON: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room3",
-//         room_name: "Room 3",
-//         is_sessional: false,
-//       },
-//       3: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room4",
-//         room_name: "Room 4",
-//         is_sessional: false,
-//       },
-//       5: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room5",
-//         room_name: "Room 5",
-//         is_sessional: false,
-//       },
-//     },
-//     TUE: {
-//       2: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room6",
-//         room_name: "Room 6",
-//         is_sessional: false,
-//       },
-//       4: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room7",
-//         room_name: "Room 7",
-//         is_sessional: false,
-//       },
-//       7: {
-//         courseId: "cse354",
-//         section: "CSE-354 - Electronics Lab",
-//         periodSpan: 2,
-//         room_id: "lab301",
-//         room_name: "Electronics Lab",
-//         is_sessional: true,
-//       },
-//     },
-//     WED: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room8",
-//         room_name: "Room 8",
-//         is_sessional: false,
-//       },
-//       3: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room9",
-//         room_name: "Room 9",
-//         is_sessional: false,
-//       },
-//       5: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room10",
-//         room_name: "Room 10",
-//         is_sessional: false,
-//       },
-//     },
-//     THU: {
-//       2: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room1",
-//         room_name: "Room 1",
-//         is_sessional: false,
-//       },
-//       4: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room2",
-//         room_name: "Room 2",
-//         is_sessional: false,
-//       },
-//     },
-//   },
-//   sectionB: {
-//     SUN: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room3",
-//         room_name: "Room 3",
-//         is_sessional: false,
-//       },
-//       3: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room4",
-//         room_name: "Room 4",
-//         is_sessional: false,
-//       },
-//       5: {
-//         courseId: "cse336",
-//         section: "CSE-336 - Computer Lab 2",
-//         periodSpan: 2,
-//         room_id: "lab102",
-//         room_name: "Computer Lab 2",
-//         is_sessional: true,
-//       },
-//     },
-//     MON: {
-//       2: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room5",
-//         room_name: "Room 5",
-//         is_sessional: false,
-//       },
-//       4: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room6",
-//         room_name: "Room 6",
-//         is_sessional: false,
-//       },
-//       6: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room7",
-//         room_name: "Room 7",
-//         is_sessional: false,
-//       },
-//     },
-//     TUE: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room8",
-//         room_name: "Room 8",
-//         is_sessional: false,
-//       },
-//       3: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room9",
-//         room_name: "Room 9",
-//         is_sessional: false,
-//       },
-//       7: {
-//         courseId: "cse354",
-//         section: "CSE-354 - Network Lab",
-//         periodSpan: 2,
-//         room_id: "lab302",
-//         room_name: "Network Lab",
-//         is_sessional: true,
-//       },
-//     },
-//     WED: {
-//       2: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room10",
-//         room_name: "Room 10",
-//         is_sessional: false,
-//       },
-//       4: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room1",
-//         room_name: "Room 1",
-//         is_sessional: false,
-//       },
-//       6: {
-//         courseId: "cse313",
-//         section: "CSE-313",
-//         periodSpan: 1,
-//         room_id: "room2",
-//         room_name: "Room 2",
-//         is_sessional: false,
-//       },
-//     },
-//     THU: {
-//       1: {
-//         courseId: "ct",
-//         section: "CT",
-//         periodSpan: 1,
-//         room_id: "room3",
-//         room_name: "Room 3",
-//         is_sessional: false,
-//       },
-//       3: {
-//         courseId: "cse335",
-//         section: "CSE-335",
-//         periodSpan: 1,
-//         room_id: "room4",
-//         room_name: "Room 4",
-//         is_sessional: false,
-//       },
-//       5: {
-//         courseId: "cse331",
-//         section: "CSE-331",
-//         periodSpan: 1,
-//         room_id: "room5",
-//         room_name: "Room 5",
-//         is_sessional: false,
-//       },
-//     },
-//   },
-// };
-
 const timeSlots = [
   { period: 1, startTime: "8:10", endTime: "9:00" },
   { period: 2, startTime: "9:00", endTime: "9:50" },
@@ -280,17 +19,11 @@ let RoutineData = {
   sectionB:{}
 }
 
+let courses = {}
+
+
 function getCourseById(courseId) {
   if (courseId === "ct") return { code: "CT", name: "Class Test" }
-
-  const courses = {
-    cse313: { code: "CSE-313", name: "Database Systems" },
-    cse331: { code: "CSE-331", name: "Software Engineering" },
-    cse335: { code: "CSE-335", name: "Computer Networks" },
-    cse336: { code: "CSE-336", name: "Database Lab" },
-    cse354: { code: "CSE-354", name: "Software Lab" },
-  }
-
   return courses[courseId] || { code: courseId, name: courseId }
 }
 
@@ -298,16 +31,18 @@ function getCourseById(courseId) {
 document.addEventListener("DOMContentLoaded", () => {
   const page = document.body.dataset.page;
   if (page === "view_routine") {
-    fetch('/api/edit_routine')
+    fetch('/api/view_routine')
       .then(response => {
         if (!response.ok) throw new Error('Network error');
         return response.json();
       })
       .then(data => { 
         currentEditingRoutineId = Number(data.routine_id);
-        RoutineData = data.routine_data
+        RoutineData = data.routine_data;
+        courses = data.courses;
         // Transform teachers (optional styling)
         console.log(currentEditingRoutineId);
+        console.log(courses);
         renderRoutineView();
       })
 
@@ -438,7 +173,7 @@ function createCourseCell(cell) {
 `
 
   if (!isClassTest) {
-    html += `<div class="course-details">${course.name}</div>`
+    // html += `<div class="course-details">${course.name}</div>`
   }
 
   if (cell.periodSpan && cell.periodSpan > 1) {
