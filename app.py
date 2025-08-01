@@ -509,7 +509,7 @@ def api_edit_routine():
             JOIN courses c ON p.course_id = c.course_id
             JOIN classrooms r ON p.room_id = r.room_id
             WHERE p.routine_id = %s and p.section = "A"
-            ORDER BY p.day, p.period_id;
+            ORDER BY p.day, p.period_id
 
         """, (routine_id,))
         all_periods_section_A = cursor.fetchall()
@@ -633,7 +633,7 @@ def api_view_routine():
             SELECT 
             p.course_id,
             c.course_code,
-            c.course_title
+            c.course_title,
             p.period_id,
             p.period_span,
             p.day,
@@ -644,7 +644,7 @@ def api_view_routine():
             JOIN courses c ON p.course_id = c.course_id
             JOIN classrooms r ON p.room_id = r.room_id
             WHERE p.routine_id = %s and p.section = "A"
-            ORDER BY p.day, p.period_id;
+            ORDER BY p.day, p.period_id
 
         """, (session['routine_id'],))
         all_periods_section_A = cursor.fetchall()
@@ -654,7 +654,7 @@ def api_view_routine():
             SELECT 
             p.course_id,
             c.course_code,
-            c.course_title
+            c.course_title,
             p.period_id,
             p.period_span,
             p.day,
@@ -665,10 +665,21 @@ def api_view_routine():
             JOIN courses c ON p.course_id = c.course_id
             JOIN classrooms r ON p.room_id = r.room_id
             WHERE p.routine_id = %s and p.section = "B"
-            ORDER BY p.day, p.period_id;
+            ORDER BY p.day, p.period_id
 
         """, (session['routine_id'],))
         all_periods_section_B = cursor.fetchall()
+        
+        
+        cursor.execute("""
+            SELECT course_id , c.course_code, c.course_title
+            FROM routines r
+            JOIN batches b ON r.batch_id = b.batch_id
+            JOIN courses c ON c.level = b.level AND c.term = b.term
+            WHERE r.routine_id = %s;
+
+        """, (session['routine_id'],))
+        all_courses = cursor.fetchall()
     conn.close()
     
     routineSectionA = []
@@ -703,6 +714,15 @@ def api_view_routine():
         })
     
 
+    
+    courses = {}
+    for course in all_courses:
+        courses[course['course_id']] = {
+            'code' : course['course_code'],
+            'name' : course['course_title']
+        }
+    
+    print(courses)
     
     mock_data = {
         'sectionA': {},
@@ -743,9 +763,14 @@ def api_view_routine():
             'is_sessional': period['is_sessional']
         }
 
+    
+    print(courses)
+    print(mock_data)
+    
     return jsonify({
         'routine_id': session['routine_id'],
-        'routine_data': mock_data
+        'routine_data': mock_data,
+        'courses' : courses
     })
     
 
